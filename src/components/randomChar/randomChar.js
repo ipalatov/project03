@@ -15,6 +15,26 @@ const RandomCharSpan = styled.span`
     font-weight: bold;
 `;
 
+const RandomCharUl = styled.ul`
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+`;
+
+const RandomCharLiLast = styled.li`
+    display: flex !important;
+    justify-content: space-between !important;
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);    
+`;
+
+const RandomCharLi = styled(RandomCharLiLast)`
+border-bottom: 0;
+`;
+
 
 export default class RandomChar extends Component {
 
@@ -23,24 +43,24 @@ export default class RandomChar extends Component {
         return (
             <RandomCharBlock className="">
                 <h4>Random Character: John</h4>
-                <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between">
+                <RandomCharUl>
+                    <RandomCharLi>
                         <RandomCharSpan>Gender </RandomCharSpan>
                         <span>male</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
+                    </RandomCharLi>
+                    <RandomCharLi>
                         <RandomCharSpan>Born </RandomCharSpan>
                         <span>11.03.1039</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
+                    </RandomCharLi>
+                    <RandomCharLi>
                         <RandomCharSpan>Died </RandomCharSpan>
                         <span>13.09.1089</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
+                    </RandomCharLi>
+                    <RandomCharLiLast>
                         <RandomCharSpan>Culture </RandomCharSpan>
                         <span>Anarchy</span>
-                    </li>
-                </ul>
+                    </RandomCharLiLast>
+                </RandomCharUl>
             </RandomCharBlock>
         );
     }
