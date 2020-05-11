@@ -1,5 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import GotService from '../../services/gotService';
+import Spinner from '../spinner/';
+
 
 
 const UlBlock = styled.ul`
@@ -20,18 +23,45 @@ const LiBlock = styled.li`
 
 export default class ItemList extends Component {
 
+    gotService = new GotService();
+
+    state = {
+        charList: null
+    }
+
+    componentDidMount() {
+        this.gotService.getAllCharacters()
+            .then((charList) => {
+                this.setState({ charList })
+            })
+    }
+
+    renderItems(arr) {
+        return arr.map((item, i) => {
+            return (
+                <LiBlock
+                    key={i}
+                    onClick={() => this.props.onCharSelected(41+i)} >
+                    {item.name}
+                </LiBlock>
+            )
+        })
+    }
+
     render() {
+
+        const { charList } = this.state;
+
+        if (!charList) {
+            return <Spinner />
+        }
+        
+        const items = this.renderItems(charList);
+
+
         return (
             <UlBlock>
-                <LiBlock>
-                    John Snow
-                </LiBlock>
-                <LiBlock>
-                    Brandon Stark
-                </LiBlock>
-                <LiBlock>
-                    Geremy
-                </LiBlock>
+                {items}
             </UlBlock>
         );
     }

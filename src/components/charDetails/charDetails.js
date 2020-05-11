@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './charDetails.css';
 import styled from 'styled-components';
+import GotService from '../../services/gotService';
+
 
 const CharDetailsBlock = styled.div`
     background-color: #fff;
@@ -36,26 +38,61 @@ border-bottom: 0;
 
 export default class CharDetails extends Component {
 
+    gotService = new GotService();
+    state = {
+        char: null
+    }
+
+    componentDidMount() {
+        this.updateChar();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.charId !== prevProps.charId) {
+            this.updateChar();
+        }
+    }
+
+    updateChar() {
+        const { charId } = this.props;
+        if (!charId) {
+            console.log(charId);
+            return;
+        }
+
+        this.gotService.getCharacter(charId)
+            .then((char) => {
+                this.setState({ char })
+            })
+    }
+
     render() {
+
+        if (!this.state.char) {
+            return (<span className='select-error'>Please select character</span>)
+        }
+
+        const { name, gender, born, died, culture } = this.state.char;
+
         return (
             <CharDetailsBlock>
-                <h4>John Snow</h4>
+                <h4>{name}</h4>
                 <CharDetailsUl>
                     <CharDetailsLi>
                         <span className="term">Gender</span>
-                        <span>male</span>
+                        <span>{gender}</span>
                     </CharDetailsLi>
                     <CharDetailsLi>
                         <span className="term">Born</span>
-                        <span>1783</span>
+                        <span>{born}</span>
                     </CharDetailsLi>
                     <CharDetailsLi>
                         <span className="term">Died</span>
-                        <span>1820</span>
+                        <span>{died}</span>
                     </CharDetailsLi>
                     <CharDetailsLiLast>
                         <span className="term">Culture</span>
-                        <span>First</span>
+                        <span>{culture}</span>
                     </CharDetailsLiLast>
                 </CharDetailsUl>
             </CharDetailsBlock>
