@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import GotService from '../../services/gotService';
 import Spinner from '../spinner/';
 
 
@@ -23,26 +22,28 @@ const LiBlock = styled.li`
 
 export default class ItemList extends Component {
 
-    gotService = new GotService();
-
     state = {
-        charList: null
+        itemList: null
     }
 
     componentDidMount() {
-        this.gotService.getAllCharacters()
-            .then((charList) => {
-                this.setState({ charList })
+        const {getData} = this.props;
+
+        getData()
+            .then((itemList) => {
+                this.setState({ itemList })
             })
     }
 
     renderItems(arr) {
-        return arr.map((item, i) => {
+        return arr.map((item) => {
+            const {id} = item;
+            const label = this.props.renderItem(item);
             return (
                 <LiBlock
-                    key={i}
-                    onClick={() => this.props.onCharSelected(41+i)} >
-                    {item.name}
+                    key={id}
+                    onClick={() => this.props.onItemSelected(id)} >
+                    {label}
                 </LiBlock>
             )
         })
@@ -50,13 +51,13 @@ export default class ItemList extends Component {
 
     render() {
 
-        const { charList } = this.state;
+        const { itemList } = this.state;
 
-        if (!charList) {
+        if (!itemList) {
             return <Spinner />
         }
-        
-        const items = this.renderItems(charList);
+
+        const items = this.renderItems(itemList);
 
 
         return (
