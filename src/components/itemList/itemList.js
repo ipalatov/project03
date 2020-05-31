@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Spinner from '../spinner/';
 
@@ -20,50 +20,46 @@ const LiBlock = styled.li`
     cursor: pointer;
 `;
 
-export default class ItemList extends Component {
+const ItemList = ({ getData, renderItem, onItemSelected }) => {
 
-    state = {
-        itemList: null
-    }
+    const [itemList, updateList] = useState(null);
 
-    componentDidMount() {
-        const {getData} = this.props;
+    useEffect(
+        () => {
+            getData()
+                .then((itemList) => {
+                    updateList(itemList)
+                })
+        }, []
+    );
 
-        getData()
-            .then((itemList) => {
-                this.setState({ itemList })
-            })
-    }
-
-    renderItems(arr) {
+    const renderItems = (arr) => {
         return arr.map((item) => {
-            const {id} = item;
-            const label = this.props.renderItem(item);
+            const { id } = item;
+            const label = renderItem(item);
             return (
                 <LiBlock
                     key={id}
-                    onClick={() => this.props.onItemSelected(id)} >
+                    onClick={() => onItemSelected(id)} >
                     {label}
                 </LiBlock>
             )
         })
     }
 
-    render() {
-
-        const { itemList } = this.state;
-
-        if (!itemList) {
-            return <Spinner />
-        }
-
-        const items = this.renderItems(itemList);
-
-
-        return (
-            <UlBlock>
-                {items}
-            </UlBlock>
-        );
+    if (!itemList) {
+        return <Spinner />
     }
+
+    const items = renderItems(itemList);
+
+
+    return (
+        <UlBlock>
+            {items}
+        </UlBlock>
+    );
+
 }
+
+export default ItemList;
